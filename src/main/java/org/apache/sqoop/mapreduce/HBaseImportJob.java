@@ -28,8 +28,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTable;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -129,6 +129,7 @@ public class HBaseImportJob extends DataDrivenImportJob {
   protected void jobSetup(Job job) throws IOException, ImportException {
     Configuration conf = job.getConfiguration();
     String tableName = conf.get(HBasePutProcessor.TABLE_NAME_KEY);
+    TableName hTableName= TableName.valueOf(tableName);
     String familyName = conf.get(HBasePutProcessor.COL_FAMILY_KEY);
 
     if (null == tableName) {
@@ -159,8 +160,11 @@ public class HBaseImportJob extends DataDrivenImportJob {
     } else {
       HBaseConfiguration.addHbaseResources(conf);
     }
+    Connection hbaseConnection = ConnectionFactory.createConnection(conf);
 
-    HBaseAdmin admin = new HBaseAdmin(conf);
+    Admin admin = hbaseConnection.getAdmin();
+
+//    HBaseAdmin admin = new HBaseAdmin(conf);
 
     if (!skipDelegationTokens(conf)) {
       // Add authentication token to the job if we're running on secure cluster.
@@ -214,11 +218,11 @@ public class HBaseImportJob extends DataDrivenImportJob {
     HTableDescriptor tableDesc = null;
     byte [] familyBytes = Bytes.toBytes(familyName);
     HColumnDescriptor colDesc = new HColumnDescriptor(familyBytes);
-    if (!admin.tableExists(tableName)) {
+    if (!admin.tableExists(hTableName)) {
       if (options.getCreateHBaseTable()) {
         // Create the table.
         LOG.info("Creating missing HBase table " + tableName);
-        tableDesc =  new HTableDescriptor(tableName);
+        tableDesc =  new HTableDescriptor(hTableName);
         tableDesc.addFamily(colDesc);
         admin.createTable(tableDesc);
       } else {
@@ -228,16 +232,16 @@ public class HBaseImportJob extends DataDrivenImportJob {
       }
     } else {
       // Table exists, so retrieve their current version
-      tableDesc = admin.getTableDescriptor(Bytes.toBytes(tableName));
+      tableDesc = admin.getTableDescriptor(hTableName);
 
       // Check if current version do have specified column family
       if (!tableDesc.hasFamily(familyBytes)) {
         if (options.getCreateHBaseTable()) {
           // Create the column family.
           LOG.info("Creating missing column family " + familyName);
-          admin.disableTable(tableName);
-          admin.addColumn(tableName, colDesc);
-          admin.enableTable(tableName);
+          admin.disableTable(hTableName);
+          admin.addColumn(hTableName, colDesc);
+          admin.enableTable(hTableName);
         } else {
           LOG.warn("Could not find column family " + familyName + " in table "
             + tableName);
