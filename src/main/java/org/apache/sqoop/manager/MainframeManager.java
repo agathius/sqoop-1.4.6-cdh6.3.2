@@ -26,13 +26,11 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.sqoop.accumulo.AccumuloUtil;
-import org.apache.sqoop.hbase.HBaseUtil;
 import org.apache.sqoop.mapreduce.AccumuloImportJob;
-import org.apache.sqoop.mapreduce.HBaseBulkImportJob;
-import org.apache.sqoop.mapreduce.HBaseImportJob;
 import org.apache.sqoop.mapreduce.ImportJobBase;
 import org.apache.sqoop.mapreduce.mainframe.MainframeDatasetInputFormat;
 import org.apache.sqoop.mapreduce.mainframe.MainframeImportJob;
@@ -73,15 +71,7 @@ public class MainframeManager extends com.cloudera.sqoop.manager.ConnManager {
 
     ImportJobBase importer;
     if (opts.getHBaseTable() != null) {
-      if (!HBaseUtil.isHBaseJarPresent()) {
-        throw new ImportException("HBase jars are not present in "
-            + "classpath, cannot import to HBase!");
-      }
-      if (!opts.isBulkLoadEnabled()) {
-        importer = new HBaseImportJob(opts, context);
-      } else {
-        importer = new HBaseBulkImportJob(opts, context);
-      }
+      throw new NotImplementedException("Hbase is removed in this version");
     } else if (opts.getAccumuloTable() != null) {
       if (!AccumuloUtil.isAccumuloJarPresent()) {
         throw new ImportException("Accumulo jars are not present in "
