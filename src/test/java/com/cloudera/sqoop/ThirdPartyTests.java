@@ -18,17 +18,10 @@
 
 package com.cloudera.sqoop;
 
-import com.cloudera.sqoop.hbase.HBaseImportAddRowKeyTest;
-import com.cloudera.sqoop.hbase.HBaseImportNullTest;
-import com.cloudera.sqoop.hbase.HBaseImportTypesTest;
 import com.cloudera.sqoop.manager.DB2ManagerImportManualTest;
 
 import org.apache.sqoop.hcat.HCatalogExportTest;
 import org.apache.sqoop.hcat.HCatalogImportTest;
-
-import com.cloudera.sqoop.hbase.HBaseImportTest;
-import com.cloudera.sqoop.hbase.HBaseQueryImportTest;
-import com.cloudera.sqoop.hbase.HBaseUtilTest;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -133,12 +126,12 @@ public final class ThirdPartyTests extends TestCase {
     suite.addTestSuite(DB2ManagerImportManualTest.class);
 
     // Hbase
-    suite.addTestSuite(HBaseImportTest.class);
-    suite.addTestSuite(HBaseImportAddRowKeyTest.class);
-    suite.addTestSuite(HBaseImportNullTest.class);
-    suite.addTestSuite(HBaseImportTypesTest.class);
-    suite.addTestSuite(HBaseQueryImportTest.class);
-    suite.addTestSuite(HBaseUtilTest.class);
+//    suite.addTestSuite(HBaseImportTest.class);
+//    suite.addTestSuite(HBaseImportAddRowKeyTest.class);
+//    suite.addTestSuite(HBaseImportNullTest.class);
+//    suite.addTestSuite(HBaseImportTypesTest.class);
+//    suite.addTestSuite(HBaseQueryImportTest.class);
+//    suite.addTestSuite(HBaseUtilTest.class);
 
     // HCatalog
     suite.addTestSuite(HCatalogImportTest.class);

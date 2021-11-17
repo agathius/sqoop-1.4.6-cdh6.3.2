@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.sqoop.accumulo.AccumuloUtil;
-import org.apache.sqoop.hbase.HBaseUtil;
 import org.apache.sqoop.tool.MainframeImportTool;
 import org.junit.After;
 import org.junit.Before;
@@ -102,23 +101,23 @@ public class TestMainframeManager extends BaseSqoopTestCase {
         .intValue(), Types.VARCHAR);
   }
 
-  @Test
-  public void testImportTableNoHBaseJarPresent() {
-    HBaseUtil.setAlwaysNoHBaseJarMode(true);
-    opts.setHBaseTable("dummy_table");
-    try {
-      manager.importTable(context);
-      fail("An ImportException should be thrown: "
-          + "HBase jars are not present in classpath, cannot import to HBase!");
-    } catch (ImportException e) {
-      assertEquals(e.toString(),
-          "HBase jars are not present in classpath, cannot import to HBase!");
-    } catch (IOException e) {
-      fail("No IOException should be thrown!");
-    } finally {
-      opts.setHBaseTable(null);
-    }
-  }
+//  @Test
+//  public void testImportTableNoHBaseJarPresent() {
+//    HBaseUtil.setAlwaysNoHBaseJarMode(true);
+//    opts.setHBaseTable("dummy_table");
+//    try {
+//      manager.importTable(context);
+//      fail("An ImportException should be thrown: "
+//          + "HBase jars are not present in classpath, cannot import to HBase!");
+//    } catch (ImportException e) {
+//      assertEquals(e.toString(),
+//          "HBase jars are not present in classpath, cannot import to HBase!");
+//    } catch (IOException e) {
+//      fail("No IOException should be thrown!");
+//    } finally {
+//      opts.setHBaseTable(null);
+//    }
+//  }
 
   @Test
   public void testImportTableNoAccumuloJarPresent() {
